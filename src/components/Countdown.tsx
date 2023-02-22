@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { TimeDisplay } from "./TimeDisplay";
 
 // Type for a stream schedule "segment" as noted here: https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule
 type Segment = {
@@ -94,10 +95,9 @@ export class Countdown extends React.Component<{}, CountdownState> {
       <>
         <p className="text-white">This is where the countdown timer will be.</p>
         {this.state.nextStream && (
-          <p>
-            {" "}
-            The next stream will begin at {this.state.nextStream.start_time}
-          </p>
+          <TimeDisplay
+            streamStartTime={this.state.nextStream.start_time}
+          ></TimeDisplay>
         )}
       </>
     );

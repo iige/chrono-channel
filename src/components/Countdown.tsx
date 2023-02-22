@@ -95,9 +95,7 @@ export class Countdown extends React.Component<{}, CountdownState> {
       <>
         <p className="text-white">This is where the countdown timer will be.</p>
         {this.state.nextStream && (
-          <TimeDisplay
-            streamStartTime={this.state.nextStream.start_time}
-          ></TimeDisplay>
+          <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
         )}
       </>
     );

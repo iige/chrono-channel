@@ -50,16 +50,40 @@ export class TimeDisplay extends React.Component<
         secondsUntil: seconds,
       });
     }, 1000);
+
+    console.log(this.props.streamStartTime);
   }
 
   render() {
     return (
       <>
-        <p>
-          The next stream begins in {this.state.daysUntil} days,{" "}
-          {this.state.hoursUntil} hours, {this.state.minutesUntil} minutes,{" "}
-          {this.state.secondsUntil} seconds
-        </p>
+        <div className="flex flex-row justify-center text-center font-montserrat text-white">
+          <div className="flex flex-col">
+            <h2 className="text-3xl">{this.state.daysUntil}</h2>
+            <h3 className="text-xs uppercase">Days</h3>
+          </div>
+
+          <span className="self-center px-2 text-5xl">·</span>
+
+          <div className="flex flex-col">
+            <h2 className="text-3xl">{this.state.hoursUntil}</h2>{" "}
+            <h3 className="text-xs uppercase">Hours</h3>
+          </div>
+
+          <span className="self-center px-2 text-5xl">·</span>
+
+          <div className="flex flex-col">
+            <h2 className="text-3xl">{this.state.minutesUntil}</h2>{" "}
+            <h3 className="text-xs uppercase">Minutes</h3>
+          </div>
+
+          <span className="self-center px-2 text-5xl">·</span>
+
+          <div className="flex flex-col">
+            <h2 className="text-3xl">{this.state.secondsUntil}</h2>{" "}
+            <h3 className="text-xs uppercase">Seconds</h3>
+          </div>
+        </div>
       </>
     );
   }

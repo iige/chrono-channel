@@ -5,11 +5,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        montserrat: ["Montserrat", "sans-serif"]
+    },
       colors: {
-        darkPurple: "#201C2B",
-        purpleAccent: "#6441A4",
-        lightGrey: "#E5E3E8",
-        lightPurple: "#E2DBF0"
+        twitchDarkPurple: "#201C2B",
+        twitchPurple: "#6441A4",
+        twitchLightGrey: "#E5E3E8",
+        twitchLightPurple: "#E2DBF0"
       }
     },
   },

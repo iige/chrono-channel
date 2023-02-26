@@ -3,11 +3,8 @@ import { Countdown } from "./components/Countdown";
 
 function App() {
   return (
-    <div className="App">
-      <p className="text-white">
-        Hello, world! This is a test
-        <Countdown />
-      </p>
+    <div className="h-[100vh]">
+      <Countdown />
     </div>
   );
 }

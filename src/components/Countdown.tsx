@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { Header } from "./Header";
 import { TimeDisplay } from "./TimeDisplay";
 
 // Type for a stream schedule "segment" as noted here: https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule
@@ -86,18 +87,27 @@ export class Countdown extends React.Component<{}, CountdownState> {
     });
   }
 
-  async componentDidMount(): Promise<void> {
+  componentDidMount() {
     this.setState({ ...this.state, firstMount: false });
   }
 
   render(): ReactNode {
+    //   if (this.state.scheduleData) {
     return (
-      <>
-        <p className="text-white">This is where the countdown timer will be.</p>
-        {this.state.nextStream && (
-          <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
-        )}
-      </>
+      <div className="flex min-h-full flex-col">
+        <Header
+          channelName={this.state.scheduleData?.data.broadcaster_name ?? ""}
+        />
+        <div className="grow bg-twitchDarkPurple">
+          <TimeDisplay
+            streamStartTime={
+              this.state.nextStream?.start_time ?? "2023-02-27T01:00:00Z"
+            }
+          />
+        </div>
+      </div>
     );
+    //}
+    //return <></>;
   }
 }

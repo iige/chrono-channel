@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+/* custom css */
+.glow {
+  text-shadow: #6441a4 1px 0 1px, #6441a4 0 1px 1px, #6441a4 -1px 0 1px,
+    #6441a4 0 -1px 1px;
+}

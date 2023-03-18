@@ -51,13 +51,13 @@ export class TimeDisplay extends React.Component<
       });
     }, 1000);
 
-    console.log(this.props.streamStartTime);
+    console.log(`Start Time: ${this.props.streamStartTime}`);
   }
 
   render() {
     return (
       <>
-        <div className="flex flex-row justify-center text-center font-montserrat text-white">
+        <div className="mt-9 flex flex-row justify-center text-center font-montserrat text-white">
           <div className="flex flex-col">
             <h2 className="text-3xl">{this.state.daysUntil}</h2>
             <h3 className="text-xs uppercase">Days</h3>

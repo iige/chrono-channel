@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
+import { DaysOfTheWeek } from "./DaysOfTheWeek";
 import { Header } from "./Header";
 import { TimeDisplay } from "./TimeDisplay";
+import { Timezone } from "./Timezone";
 
 // Type for a stream schedule "segment" as noted here: https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule
 type Segment = {
@@ -92,22 +94,23 @@ export class Countdown extends React.Component<{}, CountdownState> {
   }
 
   render(): ReactNode {
-    //   if (this.state.scheduleData) {
+    let timeDisplay = <></>;
+    if (this.state.nextStream) {
+      timeDisplay = (
+        <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
+      );
+    }
     return (
       <div className="flex min-h-full flex-col">
         <Header
           channelName={this.state.scheduleData?.data.broadcaster_name ?? ""}
         />
         <div className="grow bg-twitchDarkPurple">
-          <TimeDisplay
-            streamStartTime={
-              this.state.nextStream?.start_time ?? "2023-02-27T01:00:00Z"
-            }
-          />
+          {timeDisplay}
+          <DaysOfTheWeek></DaysOfTheWeek>
+          <Timezone></Timezone>
         </div>
       </div>
     );
-    //}
-    //return <></>;
   }
 }

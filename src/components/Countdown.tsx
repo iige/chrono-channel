@@ -8,13 +8,30 @@ import {
   ScheduleApiResponseData,
   Segment,
 } from "./types";
+import { DateTime } from "luxon";
+import { NoUpcoming } from "./NoUpcoming";
 
 type CountdownState = {
   firstMount: boolean;
   scheduleData: ScheduleApiResponseData | null;
   categoryData: CategoryApiResponseData | null;
   nextStream: Segment | null;
+  onVacation: boolean;
 };
+
+function getVacationStatus(scheduleData: ScheduleApiResponseData): boolean {
+  if (scheduleData.data.vacation) {
+    const vacationStart = DateTime.fromISO(
+      scheduleData.data.vacation.start_time
+    );
+    const vacationEnd = DateTime.fromISO(scheduleData.data.vacation.end_time);
+    const now = DateTime.now();
+    if (now >= vacationStart && now <= vacationEnd) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export class Countdown extends React.Component<{}, CountdownState> {
   constructor(props: {}) {
@@ -24,6 +41,7 @@ export class Countdown extends React.Component<{}, CountdownState> {
       scheduleData: null,
       categoryData: null,
       nextStream: null,
+      onVacation: false,
     };
   }
 
@@ -45,8 +63,14 @@ export class Countdown extends React.Component<{}, CountdownState> {
       response: ScheduleApiResponseData,
       nextStream: Segment | null
     ) => {
+      const onVacation = getVacationStatus(response);
       this.setState((prevState) => {
-        return { ...prevState, scheduleData: response, nextStream: nextStream };
+        return {
+          ...prevState,
+          scheduleData: response,
+          nextStream: nextStream,
+          onVacation: onVacation,
+        };
       });
       console.log("schedule data", response);
     };
@@ -113,12 +137,26 @@ export class Countdown extends React.Component<{}, CountdownState> {
       );
     }
 
-    if (this.state.categoryData) {
-      categoryUrl = this.state.categoryData.data[0].box_art_url
-        .replace("{width}", "270")
-        .replace("{height}", "360");
-      console.log("categoryUrl: " + categoryUrl);
-      contentStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+    let displayContent;
+
+    if (this.state.onVacation) {
+      displayContent = <NoUpcoming></NoUpcoming>;
+    } else {
+      if (this.state.categoryData) {
+        categoryUrl = this.state.categoryData.data[0].box_art_url
+          .replace("{width}", "270")
+          .replace("{height}", "360");
+        console.log("categoryUrl: " + categoryUrl);
+        contentStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+      }
+
+      displayContent = (
+        <>
+          {timeDisplay}
+          <DaysOfTheWeek></DaysOfTheWeek>
+          <Timezone></Timezone>
+        </>
+      );
     }
 
     return (
@@ -131,9 +169,7 @@ export class Countdown extends React.Component<{}, CountdownState> {
           id="extensionContent"
           style={contentStyle}
         >
-          {timeDisplay}
-          <DaysOfTheWeek></DaysOfTheWeek>
-          <Timezone></Timezone>
+          {displayContent}
         </div>
       </div>
     );

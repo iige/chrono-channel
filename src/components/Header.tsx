@@ -5,10 +5,6 @@ type HeaderProps = {
 };
 
 export class Header extends React.Component<HeaderProps, {}> {
-  componentDidMount() {
-    this.setState({ ...this.state, firstMount: false });
-  }
-
   render() {
     return (
       <div className="bg-twitchPurple">

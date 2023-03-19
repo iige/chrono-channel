@@ -13,7 +13,6 @@ import { TwitchApiClient } from "../TwitchApiClient";
 import { getVacationStatus } from "./util";
 
 type ExtensionPanelState = {
-  firstMount: boolean;
   scheduleData: ScheduleApiResponseData | null;
   categoryData: CategoryApiResponseData | null;
   nextStream: Segment | null;
@@ -24,7 +23,6 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      firstMount: true,
       scheduleData: null,
       categoryData: null,
       nextStream: null,

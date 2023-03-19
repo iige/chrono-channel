@@ -1,10 +1,10 @@
 import "./App.css";
-import { Countdown } from "./components/Countdown";
+import { ExtensionPanel } from "./components/ExtensionPanel";
 
 function App() {
   return (
     <div className="h-[100vh]">
-      <Countdown />
+      <ExtensionPanel />
     </div>
   );
 }

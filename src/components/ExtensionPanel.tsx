@@ -124,7 +124,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
             <UpcomingStreams
               schedule={this.state.scheduleData}
             ></UpcomingStreams>
-            <Timezone></Timezone>
+            <Timezone />
           </>
         );
       }

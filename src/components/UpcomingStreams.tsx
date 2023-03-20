@@ -98,7 +98,7 @@ export class UpcomingStreams extends React.Component<
   render() {
     return (
       <>
-        <div className="col-auto mt-9 grid grid-cols-7 grid-rows-1 px-2 text-center font-montserrat text-xs uppercase text-white">
+        <div className="col-auto mt-10 grid grid-cols-7 grid-rows-1 px-2 text-center font-montserrat text-xs uppercase text-white">
           {daysOfWeek.map((day, idx) => {
             let timeJSX = null;
             let className = "";

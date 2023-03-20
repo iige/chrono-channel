@@ -57,7 +57,7 @@ export class TimeDisplay extends React.Component<
   render() {
     return (
       <>
-        <div className="mt-9 flex flex-row justify-center text-center font-montserrat text-white">
+        <div className="mt-14 flex flex-row justify-center text-center font-montserrat text-white">
           <div className="flex flex-col">
             <h2 className="text-3xl">{this.state.daysUntil}</h2>
             <h3 className="text-xs uppercase">Days</h3>

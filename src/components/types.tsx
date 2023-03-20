@@ -8,7 +8,7 @@ export type Segment = {
     id: string;
     name: string;
   };
-  canceled_until: string;
+  canceled_until: string | null;
   is_recurring: boolean;
 };
 

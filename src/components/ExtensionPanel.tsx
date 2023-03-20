@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { DaysOfTheWeek } from "./DaysOfTheWeek";
+import { UpcomingStreams } from "./UpcomingStreams";
 import { Header } from "./Header";
 import { TimeDisplay } from "./TimeDisplay";
 import { Timezone } from "./Timezone";
@@ -10,7 +10,8 @@ import {
 } from "./types";
 import { NoUpcoming } from "./NoUpcoming";
 import { TwitchApiClient } from "../TwitchApiClient";
-import { getVacationStatus } from "./util";
+import { getNextStream, getVacationStatus } from "./util";
+import { config } from "../Globals";
 
 type ExtensionPanelState = {
   scheduleData: ScheduleApiResponseData | null;
@@ -52,14 +53,18 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
           onVacation: onVacation,
         };
       });
-      console.log("schedule data", response);
+      if (config.debugMode) {
+        console.log("schedule data", response);
+      }
     };
 
     const updateCategoryData = (response: CategoryApiResponseData) => {
       this.setState((prevState) => {
         return { ...prevState, categoryData: response };
       });
-      console.log("category data", response);
+      if (config.debugMode) {
+        console.log("category data", response);
+      }
     };
 
     (window as any).Twitch.ext.onAuthorized(async function (auth: any) {
@@ -68,16 +73,15 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       // Fetch the upcoming stream schedule for the channel, should get (up to) the next 20 scheduled streams
       const scheduleResponse = await apiClient.getScheduleData();
 
-      const nextStream =
-        scheduleResponse.data.segments.length > 0
-          ? scheduleResponse.data.segments[0]
-          : null;
+      const nextStream = getNextStream(scheduleResponse);
+      console.log("nextStream", nextStream);
 
       // If next stream has a category specified - fetch the category data so we can use the box art
       if (nextStream?.category?.id) {
         const categoryResponse = await apiClient.getCategoryData(
           nextStream.category.id
         );
+
         updateCategoryData(categoryResponse);
       }
 
@@ -100,7 +104,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       );
     }
 
-    let contentBody;
+    let contentBody = <></>;
 
     if (this.state.onVacation) {
       contentBody = <NoUpcoming />;
@@ -113,13 +117,17 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         contentStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
       }
 
-      contentBody = (
-        <>
-          {timeDisplay}
-          <DaysOfTheWeek></DaysOfTheWeek>
-          <Timezone></Timezone>
-        </>
-      );
+      if (this.state.scheduleData) {
+        contentBody = (
+          <>
+            {timeDisplay}
+            <UpcomingStreams
+              schedule={this.state.scheduleData}
+            ></UpcomingStreams>
+            <Timezone></Timezone>
+          </>
+        );
+      }
     }
 
     return (

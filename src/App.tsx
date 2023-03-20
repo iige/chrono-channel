@@ -1,5 +1,8 @@
 import "./App.css";
 import { ExtensionPanel } from "./components/ExtensionPanel";
+import { Settings } from "luxon";
+
+Settings.throwOnInvalid = true;
 
 function App() {
   return (

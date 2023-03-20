@@ -117,7 +117,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         contentStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
       }
 
-      if (this.state.scheduleData) {
+      if (this.state.nextStream && this.state.scheduleData) {
         contentBody = (
           <>
             {timeDisplay}

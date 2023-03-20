@@ -10,14 +10,17 @@ import {
 } from "./types";
 import { NoUpcoming } from "./NoUpcoming";
 import { TwitchApiClient } from "../TwitchApiClient";
-import { getNextStream, getVacationStatus } from "./util";
+import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
 import { config } from "../Globals";
+import { LiveNow } from "./LiveNow";
+import abstractBg from "../assets/abstractBg.jpg";
 
 type ExtensionPanelState = {
   scheduleData: ScheduleApiResponseData | null;
   categoryData: CategoryApiResponseData | null;
   nextStream: Segment | null;
   onVacation: boolean;
+  liveNow: boolean;
 };
 
 export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
@@ -28,15 +31,8 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       categoryData: null,
       nextStream: null,
       onVacation: false,
+      liveNow: false,
     };
-  }
-
-  componentDidUpdate(
-    prevProps: Readonly<{}>,
-    prevState: Readonly<ExtensionPanelState>,
-    snapshot?: any
-  ): void {
-    console.log(this.state);
   }
 
   async fetchData(): Promise<void> {
@@ -67,8 +63,19 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       }
     };
 
+    const updateLiveStatus = (status: boolean) => {
+      this.setState((prevState) => {
+        return { ...prevState, liveNow: status };
+      });
+    };
+
     (window as any).Twitch.ext.onAuthorized(async function (auth: any) {
       const apiClient = new TwitchApiClient(auth);
+
+      // Check if the channel is live
+      const streamResponse = await apiClient.getStreamData();
+      const liveStatus = getStreamLiveStatus(streamResponse);
+      updateLiveStatus(liveStatus);
 
       // Fetch the upcoming stream schedule for the channel, should get (up to) the next 20 scheduled streams
       const scheduleResponse = await apiClient.getScheduleData();
@@ -98,16 +105,13 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     let categoryUrl = "";
     let contentStyle: React.CSSProperties = {};
 
-    if (this.state.nextStream) {
-      timeDisplay = (
-        <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
-      );
-    }
-
-    let contentBody = <></>;
+    let contentBody = <NoUpcoming onVacation={false} />;
 
     if (this.state.onVacation) {
-      contentBody = <NoUpcoming />;
+      contentBody = <NoUpcoming onVacation={true} />;
+    } else if (this.state.liveNow) {
+      contentBody = <LiveNow />;
+      contentStyle.background = `linear-gradient(rgba(32,28,43,0.85), rgba(32,28,43,0.85)), url(${abstractBg}) center / cover no-repeat`;
     } else {
       if (this.state.categoryData) {
         categoryUrl = this.state.categoryData.data[0].box_art_url
@@ -118,6 +122,10 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       }
 
       if (this.state.nextStream && this.state.scheduleData) {
+        timeDisplay = (
+          <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
+        );
+
         contentBody = (
           <>
             {timeDisplay}
@@ -136,7 +144,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
           channelName={this.state.scheduleData?.data.broadcaster_name ?? ""}
         />
         <div
-          className="grow bg-twitchDarkPurple"
+          className="flex grow flex-col justify-center bg-twitchDarkPurple"
           id="extensionContent"
           style={contentStyle}
         >

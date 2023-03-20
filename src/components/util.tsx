@@ -1,6 +1,10 @@
 import { DateTime } from "luxon";
 import { config } from "../Globals";
-import { ScheduleApiResponseData, Segment } from "./types";
+import {
+  ScheduleApiResponseData,
+  Segment,
+  StreamApiResponseData,
+} from "./types";
 
 /**
  *
@@ -54,4 +58,13 @@ export function getNextStream(
     }
   }
   return null;
+}
+
+export function getStreamLiveStatus(
+  streamResponse: StreamApiResponseData
+): boolean {
+  if (streamResponse.data.length > 0) {
+    return streamResponse.data[0].type === "live";
+  }
+  return false;
 }

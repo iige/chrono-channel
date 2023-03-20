@@ -36,3 +36,14 @@ export type CategoryApiResponseData = {
     igdb_id: number;
   }[];
 };
+
+/* 
+  There is more available but this is all we need for now.
+  https://dev.twitch.tv/docs/api/reference/#get-streams
+*/
+export type StreamApiResponseData = {
+  data: {
+    user_name: string;
+    type: "live" | "";
+  }[];
+};

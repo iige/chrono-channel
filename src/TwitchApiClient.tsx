@@ -1,6 +1,7 @@
 import {
   CategoryApiResponseData,
   ScheduleApiResponseData,
+  StreamApiResponseData,
 } from "./components/types";
 
 export class TwitchApiClient {
@@ -36,5 +37,20 @@ export class TwitchApiClient {
     );
     const categoryResponseJson = await categoryResponse.json();
     return categoryResponseJson;
+  }
+
+  async getStreamData(): Promise<StreamApiResponseData> {
+    const streamResponse = await fetch(
+      `https://api.twitch.tv/helix/streams?user_id=${this.auth.channelId}`,
+      {
+        headers: {
+          "Client-Id": `${this.auth.clientId}`,
+          Authorization: `Extension ${this.auth.helixToken}`,
+        },
+      }
+    );
+
+    const streamResponseJson = await streamResponse.json();
+    return streamResponseJson;
   }
 }

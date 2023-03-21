@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import React from "react";
 
-export class Timezone extends React.Component {
+export class Offset extends React.Component {
   render() {
     return (
       <>

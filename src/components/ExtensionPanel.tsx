@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { UpcomingStreams } from "./UpcomingStreams";
 import { Header } from "./Header";
 import { TimeDisplay } from "./TimeDisplay";
-import { Timezone } from "./Timezone";
+import { Offset } from "./Offset";
 import {
   CategoryApiResponseData,
   ScheduleApiResponseData,
@@ -35,7 +35,12 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     };
   }
 
+  componentDidMount() {
+    this.fetchData();
+  }
+
   async fetchData(): Promise<void> {
+    // Begin state update functions
     const updateScheduleData = (
       response: ScheduleApiResponseData,
       nextStream: Segment | null
@@ -68,42 +73,50 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         return { ...prevState, liveNow: status };
       });
     };
+    // End state update functions
 
     (window as any).Twitch.ext.onAuthorized(async function (auth: any) {
       const apiClient = new TwitchApiClient(auth);
 
       // Check if the channel is live
       const streamResponse = await apiClient.getStreamData();
-      const liveStatus = getStreamLiveStatus(streamResponse);
-      updateLiveStatus(liveStatus);
+
+      if (streamResponse) {
+        const liveStatus = getStreamLiveStatus(streamResponse);
+        updateLiveStatus(liveStatus);
+      }
 
       // Fetch the upcoming stream schedule for the channel, should get (up to) the next 20 scheduled streams
       const scheduleResponse = await apiClient.getScheduleData();
-
-      const nextStream = getNextStream(scheduleResponse);
-      console.log("nextStream", nextStream);
+      let nextStream = null;
+      if (scheduleResponse) {
+        nextStream = getNextStream(scheduleResponse);
+        console.log("nextStream", nextStream);
+      }
 
       // If next stream has a category specified - fetch the category data so we can use the box art
       if (nextStream?.category?.id) {
         const categoryResponse = await apiClient.getCategoryData(
           nextStream.category.id
         );
-
-        updateCategoryData(categoryResponse);
+        if (categoryResponse) {
+          updateCategoryData(categoryResponse);
+        }
       }
 
-      updateScheduleData(scheduleResponse, nextStream);
+      if (scheduleResponse) {
+        updateScheduleData(scheduleResponse, nextStream);
+      }
     });
   }
 
-  componentDidMount() {
-    this.fetchData();
-  }
-
-  render(): ReactNode {
+  determineContentBody(): {
+    contentBody: ReactNode;
+    contentBodyStyle: React.CSSProperties;
+  } {
     let timeDisplay = <></>;
     let categoryUrl = "";
-    let contentStyle: React.CSSProperties = {};
+    let contentBodyStyle: React.CSSProperties = {};
 
     let contentBody = <NoUpcoming onVacation={false} />;
 
@@ -111,32 +124,36 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       contentBody = <NoUpcoming onVacation={true} />;
     } else if (this.state.liveNow) {
       contentBody = <LiveNow />;
-      contentStyle.background = `linear-gradient(rgba(32,28,43,0.85), rgba(32,28,43,0.85)), url(${abstractBg}) center / cover no-repeat`;
+      contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.85), rgba(32,28,43,0.85)), url(${abstractBg}) center / cover no-repeat`;
     } else {
-      if (this.state.categoryData) {
-        categoryUrl = this.state.categoryData.data[0].box_art_url
-          .replace("{width}", "270")
-          .replace("{height}", "360");
-        console.log("categoryUrl: " + categoryUrl);
-        contentStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
-      }
-
       if (this.state.nextStream && this.state.scheduleData) {
         timeDisplay = (
           <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
         );
 
+        if (this.state.categoryData) {
+          categoryUrl = this.state.categoryData.data[0].box_art_url
+            .replace("{width}", "270")
+            .replace("{height}", "360");
+          console.log("categoryUrl: " + categoryUrl);
+          contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+        }
         contentBody = (
           <>
             {timeDisplay}
             <UpcomingStreams
               schedule={this.state.scheduleData}
             ></UpcomingStreams>
-            <Timezone />
+            <Offset />
           </>
         );
       }
     }
+    return { contentBody, contentBodyStyle };
+  }
+
+  render(): ReactNode {
+    let { contentBody, contentBodyStyle } = this.determineContentBody();
 
     return (
       <div className="flex min-h-full flex-col">
@@ -146,7 +163,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         <div
           className="flex grow flex-col justify-center bg-twitchDarkPurple"
           id="extensionContent"
-          style={contentStyle}
+          style={contentBodyStyle}
         >
           {contentBody}
         </div>

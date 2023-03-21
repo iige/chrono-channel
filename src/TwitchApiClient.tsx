@@ -4,53 +4,91 @@ import {
   StreamApiResponseData,
 } from "./components/types";
 
+/** This class is a collection of functions for interacting with the Twitch API for this panel extension */
 export class TwitchApiClient {
   auth: any;
   constructor(auth: any) {
     this.auth = auth;
   }
 
-  async getScheduleData(): Promise<ScheduleApiResponseData> {
-    const scheduleResponse = await fetch(
-      `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.auth.channelId}`,
-      {
-        headers: {
-          "Client-Id": `${this.auth.clientId}`,
-          Authorization: `Extension ${this.auth.helixToken}`,
-        },
-      }
-    );
-
-    const scheduleResponseJson = await scheduleResponse.json();
-    return scheduleResponseJson;
+  // This is a helper function that adds the required headers to the request for use with the Twitch API
+  private async fetchWithAuth(url: string): Promise<Response> {
+    return await fetch(url, {
+      headers: {
+        "Client-Id": `${this.auth.clientId}`,
+        Authorization: `Extension ${this.auth.helixToken}`,
+      },
+    });
   }
 
-  async getCategoryData(categoryId: string): Promise<CategoryApiResponseData> {
-    const categoryResponse = await fetch(
-      `https://api.twitch.tv/helix/games?id=${categoryId}`,
-      {
-        headers: {
-          "Client-Id": `${this.auth.clientId}`,
-          Authorization: `Extension ${this.auth.helixToken}`,
-        },
+  /**
+   *  Fetches the schedule data from the Twitch API for the channel which the extension is installed on
+   * @returns The schedule data as returned by the Twitch API, or null if there was an error
+   */
+  async getScheduleData(): Promise<ScheduleApiResponseData | null> {
+    try {
+      const scheduleResponse = await this.fetchWithAuth(
+        `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.auth.channelId}`
+      );
+
+      if (scheduleResponse.ok) {
+        const scheduleResponseJson = await scheduleResponse.json();
+        return scheduleResponseJson;
+      } else {
+        return null;
       }
-    );
-    const categoryResponseJson = await categoryResponse.json();
-    return categoryResponseJson;
+    } catch (e) {
+      console.log("Error fetching schedule data: ", e);
+      return null;
+    }
   }
 
-  async getStreamData(): Promise<StreamApiResponseData> {
-    const streamResponse = await fetch(
-      `https://api.twitch.tv/helix/streams?user_id=${this.auth.channelId}`,
-      {
-        headers: {
-          "Client-Id": `${this.auth.clientId}`,
-          Authorization: `Extension ${this.auth.helixToken}`,
-        },
+  /**
+   * Gets extra medatada for a Category on Twitch
+   *
+   * @param categoryId The ID of the category to fetch data for
+   * @returns The category data as returned by the Twitch API, or null if there was an error
+   */
+  async getCategoryData(
+    categoryId: string
+  ): Promise<CategoryApiResponseData | null> {
+    try {
+      const categoryResponse = await this.fetchWithAuth(
+        `https://api.twitch.tv/helix/games?id=${categoryId}`
+      );
+      if (categoryResponse.ok) {
+        const categoryResponseJson = await categoryResponse.json();
+        return categoryResponseJson;
+      } else {
+        return null;
       }
+    } catch (e) {
+      console.log("Error fetching category data: ", e);
+      return null;
+    }
+  }
+
+  /**
+   * Gets information about the current stream from the Twitch API.
+   * This is used to check if the channel in which this extension is installed on is currently live.
+   *
+   * @returns The stream data as returned by the Twitch API, or null if there was an error
+   */
+  async getStreamData(): Promise<StreamApiResponseData | null> {
+    const streamResponse = await this.fetchWithAuth(
+      `https://api.twitch.tv/helix/streams?user_id=${this.auth.channelId}`
     );
 
-    const streamResponseJson = await streamResponse.json();
-    return streamResponseJson;
+    try {
+      if (streamResponse.ok) {
+        const streamResponseJson = await streamResponse.json();
+        return streamResponseJson;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.log("Error fetching stream data: ", e);
+      return null;
+    }
   }
 }

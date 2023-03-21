@@ -12,7 +12,7 @@ export type Segment = {
   is_recurring: boolean;
 };
 
-export type ScheduleApiResponseData = {
+export type ScheduleApiResponse = {
   data: {
     broadcaster_id: string;
     broadcaster_name: string;
@@ -28,7 +28,7 @@ export type ScheduleApiResponseData = {
   };
 };
 
-export type CategoryApiResponseData = {
+export type CategoryApiResponse = {
   data: {
     id: string;
     name: string;
@@ -41,7 +41,7 @@ export type CategoryApiResponseData = {
   There is more available but this is all we need for now.
   https://dev.twitch.tv/docs/api/reference/#get-streams
 */
-export type StreamApiResponseData = {
+export type StreamApiResponse = {
   data: {
     user_name: string;
     type: "live" | "";

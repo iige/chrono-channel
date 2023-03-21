@@ -1,19 +1,13 @@
 import { DateTime } from "luxon";
 import { config } from "../Globals";
-import {
-  ScheduleApiResponseData,
-  Segment,
-  StreamApiResponseData,
-} from "./types";
+import { ScheduleApiResponse, Segment, StreamApiResponse } from "./types";
 
 /**
  *
  * @param scheduleData The schedule data as returned by the Twitch API
  * @returns boolean indicating whether the streamer is on vacation
  */
-export function getVacationStatus(
-  scheduleData: ScheduleApiResponseData
-): boolean {
+export function getVacationStatus(scheduleData: ScheduleApiResponse): boolean {
   if (scheduleData.data.vacation) {
     try {
       const vacationStart = DateTime.fromISO(
@@ -39,7 +33,7 @@ export function getVacationStatus(
  * @returns The segment of the next valid stream, or null if there is no next stream
  */
 export function getNextStream(
-  scheduleResponse: ScheduleApiResponseData
+  scheduleResponse: ScheduleApiResponse
 ): Segment | null {
   const segments = scheduleResponse.data.segments;
   for (var i = 0; i < segments.length; i++) {
@@ -61,7 +55,7 @@ export function getNextStream(
 }
 
 export function getStreamLiveStatus(
-  streamResponse: StreamApiResponseData
+  streamResponse: StreamApiResponse
 ): boolean {
   if (streamResponse.data.length > 0) {
     return streamResponse.data[0].type === "live";

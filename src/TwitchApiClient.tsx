@@ -1,7 +1,7 @@
 import {
-  CategoryApiResponseData,
-  ScheduleApiResponseData,
-  StreamApiResponseData,
+  CategoryApiResponse,
+  ScheduleApiResponse,
+  StreamApiResponse,
 } from "./components/types";
 
 /** This class is a collection of functions for interacting with the Twitch API for this panel extension */
@@ -25,7 +25,7 @@ export class TwitchApiClient {
    *  Fetches the schedule data from the Twitch API for the channel which the extension is installed on
    * @returns The schedule data as returned by the Twitch API, or null if there was an error
    */
-  async getScheduleData(): Promise<ScheduleApiResponseData | null> {
+  async getScheduleData(): Promise<ScheduleApiResponse | null> {
     try {
       const scheduleResponse = await this.fetchWithAuth(
         `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.auth.channelId}`
@@ -51,7 +51,7 @@ export class TwitchApiClient {
    */
   async getCategoryData(
     categoryId: string
-  ): Promise<CategoryApiResponseData | null> {
+  ): Promise<CategoryApiResponse | null> {
     try {
       const categoryResponse = await this.fetchWithAuth(
         `https://api.twitch.tv/helix/games?id=${categoryId}`
@@ -74,7 +74,7 @@ export class TwitchApiClient {
    *
    * @returns The stream data as returned by the Twitch API, or null if there was an error
    */
-  async getStreamData(): Promise<StreamApiResponseData | null> {
+  async getStreamData(): Promise<StreamApiResponse | null> {
     const streamResponse = await this.fetchWithAuth(
       `https://api.twitch.tv/helix/streams?user_id=${this.auth.channelId}`
     );

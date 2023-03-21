@@ -3,11 +3,7 @@ import { UpcomingStreams } from "./UpcomingStreams";
 import { Header } from "./Header";
 import { TimeDisplay } from "./TimeDisplay";
 import { Offset } from "./Offset";
-import {
-  CategoryApiResponseData,
-  ScheduleApiResponseData,
-  Segment,
-} from "./types";
+import { CategoryApiResponse, ScheduleApiResponse, Segment } from "./types";
 import { NoUpcoming } from "./NoUpcoming";
 import { TwitchApiClient } from "../TwitchApiClient";
 import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
@@ -16,8 +12,8 @@ import { LiveNow } from "./LiveNow";
 import abstractBg from "../assets/abstractBg.jpg";
 
 type ExtensionPanelState = {
-  scheduleData: ScheduleApiResponseData | null;
-  categoryData: CategoryApiResponseData | null;
+  scheduleData: ScheduleApiResponse | null;
+  categoryData: CategoryApiResponse | null;
   nextStream: Segment | null;
   onVacation: boolean;
   liveNow: boolean;
@@ -42,7 +38,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
   async fetchData(): Promise<void> {
     // Begin state update functions
     const updateScheduleData = (
-      response: ScheduleApiResponseData,
+      response: ScheduleApiResponse,
       nextStream: Segment | null
     ) => {
       const onVacation = getVacationStatus(response);
@@ -59,7 +55,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       }
     };
 
-    const updateCategoryData = (response: CategoryApiResponseData) => {
+    const updateCategoryData = (response: CategoryApiResponse) => {
       this.setState((prevState) => {
         return { ...prevState, categoryData: response };
       });
@@ -154,7 +150,6 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
 
   render(): ReactNode {
     let { contentBody, contentBodyStyle } = this.determineContentBody();
-
     return (
       <div className="flex min-h-full flex-col">
         <Header

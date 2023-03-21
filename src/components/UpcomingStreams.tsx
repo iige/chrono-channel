@@ -1,10 +1,10 @@
 import { DateTime } from "luxon";
 import React from "react";
 import { config } from "../Globals";
-import { ScheduleApiResponseData } from "./types";
+import { ScheduleApiResponse } from "./types";
 
 type UpcomingStreamsProps = {
-  schedule: ScheduleApiResponseData;
+  schedule: ScheduleApiResponse;
 };
 
 type Weekday = "SUN" | "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT";

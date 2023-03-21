@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import { config } from "../Globals";
-import { ScheduleApiResponse, Segment, StreamApiResponse } from "./types";
+import { config } from "../../util/Globals";
+import { ScheduleApiResponse, Segment, StreamApiResponse } from "../types";
 
 /**
  *

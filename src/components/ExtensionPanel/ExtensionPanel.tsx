@@ -1,15 +1,15 @@
 import React, { ReactNode } from "react";
-import { UpcomingStreams } from "./UpcomingStreams";
-import { Header } from "./Header";
-import { TimeDisplay } from "./TimeDisplay";
-import { Offset } from "./Offset";
-import { CategoryApiResponse, ScheduleApiResponse, Segment } from "./types";
-import { NoUpcoming } from "./NoUpcoming";
-import { TwitchApiClient } from "../TwitchApiClient";
+import { UpcomingStreams } from "../UpcomingStreams/UpcomingStreams";
+import { Header } from "../Header/Header";
+import { TimeDisplay } from "../TimeDisplay/TimeDisplay";
+import { Offset } from "../Offset/Offset";
+import { CategoryApiResponse, ScheduleApiResponse, Segment } from "../types";
+import { NoUpcoming } from "../NoUpcoming/NoUpcoming";
+import { TwitchApiClient } from "../../util/TwitchApiClient";
 import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
-import { config } from "../Globals";
-import { LiveNow } from "./LiveNow";
-import abstractBg from "../assets/abstractBg.jpg";
+import { config } from "../../util/Globals";
+import { LiveNow } from "../LiveNow/LiveNow";
+import abstractBg from "../../assets/abstractBg.jpg";
 
 type ExtensionPanelState = {
   scheduleData: ScheduleApiResponse | null;

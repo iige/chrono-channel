@@ -2,7 +2,7 @@ import {
   CategoryApiResponse,
   ScheduleApiResponse,
   StreamApiResponse,
-} from "./components/types";
+} from "../components/types";
 
 /** This class is a collection of functions for interacting with the Twitch API for this panel extension */
 export class TwitchApiClient {

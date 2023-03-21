@@ -1,5 +1,5 @@
 import React from "react";
-import sleepyFace from "../assets/sleepyFace.svg";
+import sleepyFace from "../../assets/sleepyFace.svg";
 
 type NoUpcomingProps = {
   onVacation: boolean;

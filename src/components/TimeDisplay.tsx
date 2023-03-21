@@ -99,7 +99,7 @@ export class TimeDisplay extends React.Component<
     }
     return (
       <>
-        <div className="mt-14 flex flex-row justify-center text-center font-montserrat text-white">
+        <div className="mt-6 flex flex-row justify-center text-center font-montserrat text-white">
           {contentBody}
         </div>
       </>

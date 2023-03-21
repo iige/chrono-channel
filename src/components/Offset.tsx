@@ -5,7 +5,7 @@ export class Offset extends React.Component {
   render() {
     return (
       <>
-        <div className="mt-8 text-center font-montserrat text-xs text-white">
+        <div className="mt-4 text-center font-montserrat text-xs text-white">
           {DateTime.now().offsetNameShort}
         </div>
       </>

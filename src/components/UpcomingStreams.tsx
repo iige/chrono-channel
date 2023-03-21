@@ -12,6 +12,7 @@ type WeekdayMetadata = {
   startOfDay?: DateTime;
   glow: boolean;
   hourStart?: number;
+  minuteStart?: number;
   meridian?: "AM" | "PM";
 };
 
@@ -63,6 +64,7 @@ export class UpcomingStreams extends React.Component<
 
       const segments = this.props.schedule.data.segments;
 
+      // Loop through each day of the current week and determine if there are any streams scheduled for that day
       for (var i = 0; i < daysOfWeek.length; i++) {
         const daysToAdd = i;
         const startOfDay = startOfWeek.plus({ days: daysToAdd }).startOf("day");
@@ -82,6 +84,8 @@ export class UpcomingStreams extends React.Component<
             const meridian = hour >= 12 ? "PM" : "AM";
             const hourStart = hour > 12 ? hour - 12 : hour;
             newState.weekdays[daysOfWeek[i]].hourStart = hourStart;
+            newState.weekdays[daysOfWeek[i]].minuteStart =
+              segmentStartTime.minute;
             newState.weekdays[daysOfWeek[i]].meridian = meridian;
           }
         }
@@ -110,7 +114,12 @@ export class UpcomingStreams extends React.Component<
               timeJSX = (
                 <>
                   <br />
-                  {currentDayState.hourStart} {currentDayState.meridian}
+                  {currentDayState.hourStart}
+                  {currentDayState.minuteStart
+                    ? `:${currentDayState.minuteStart}`
+                    : ""}
+                  <br />
+                  {currentDayState.meridian}
                 </>
               );
             }

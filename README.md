@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Chrono Channel
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+This is a panel extension for Twitch that shows a countdown timer for an upcoming stream. Also displays other streams scheduled for the week.
 
 ## Available Scripts
 

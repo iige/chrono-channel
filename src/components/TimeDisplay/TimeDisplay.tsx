@@ -1,5 +1,6 @@
 import React from "react";
 import { DateTime } from "luxon";
+import { config } from "../../util/Globals";
 
 type TimeDisplayProps = {
   streamStartTime: string;
@@ -20,13 +21,27 @@ export class TimeDisplay extends React.Component<
 > {
   constructor(props: TimeDisplayProps) {
     super(props);
+    let countdownFinished = false;
+    try {
+      const streamStartDateJs = new Date(props.streamStartTime);
+      const streamStartDateTime = DateTime.fromJSDate(streamStartDateJs);
+      const now = DateTime.now();
+      if (now > streamStartDateTime) {
+        countdownFinished = true;
+      }
+    } catch (error) {
+      if (config.debugMode) {
+        console.log(error);
+      }
+    }
+
     this.state = {
       startDate: new Date(props.streamStartTime),
       daysUntil: 0,
       hoursUntil: 0,
       minutesUntil: 0,
       secondsUntil: 0,
-      countdownFinished: false,
+      countdownFinished,
     };
   }
 
@@ -34,10 +49,10 @@ export class TimeDisplay extends React.Component<
     const streamStartDate = this.state.startDate;
     const countdown = setInterval(() => {
       try {
-        const startDateJs = DateTime.fromJSDate(streamStartDate);
+        const streamStartDateTime = DateTime.fromJSDate(streamStartDate);
         const now = DateTime.now();
-        if (now < startDateJs) {
-          const diff = startDateJs
+        if (now < streamStartDateTime) {
+          const diff = streamStartDateTime
             .diff(now, ["days", "hours", "minutes", "seconds"])
             .toObject();
 
@@ -64,8 +79,6 @@ export class TimeDisplay extends React.Component<
         console.log(error);
       }
     }, 1000);
-
-    console.log(`Start Time: ${this.props.streamStartTime}`);
   }
 
   render() {
@@ -76,22 +89,30 @@ export class TimeDisplay extends React.Component<
       contentBody = (
         <>
           <div className="flex flex-col">
-            <h2 className="text-3xl">{this.state.daysUntil}</h2>
+            <h2 className="text-3xl" id="dayCountNumber">
+              {this.state.daysUntil}
+            </h2>
             <h3 className="text-xs uppercase">Days</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
-            <h2 className="text-3xl">{this.state.hoursUntil}</h2>
+            <h2 className="text-3xl" id="hourCountNumber">
+              {this.state.hoursUntil}
+            </h2>
             <h3 className="text-xs uppercase">Hours</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
-            <h2 className="text-3xl">{this.state.minutesUntil}</h2>
+            <h2 className="text-3xl" id="minuteCountNumber">
+              {this.state.minutesUntil}
+            </h2>
             <h3 className="text-xs uppercase">Minutes</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
-            <h2 className="text-3xl">{this.state.secondsUntil}</h2>
+            <h2 className="text-3xl" id="secondCountNumber">
+              {this.state.secondsUntil}
+            </h2>
             <h3 className="text-xs uppercase">Seconds</h3>
           </div>
         </>

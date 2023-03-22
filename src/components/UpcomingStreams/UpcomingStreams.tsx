@@ -124,10 +124,10 @@ export class UpcomingStreams extends React.Component<
               );
             }
             return (
-              <span className={className} key={idx}>
+              <h3 className={className} key={idx}>
                 {day}
                 {timeJSX}
-              </span>
+              </h3>
             );
           })}
         </div>

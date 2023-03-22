@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-node-access */
-import { act, render, screen, waitFor } from "@testing-library/react";
-import { Settings, DateTime } from "luxon";
+import { act, render, screen } from "@testing-library/react";
+import { DateTime } from "luxon";
 import { TimeDisplay } from "./TimeDisplay";
 
 describe("TimeDisplay", () => {

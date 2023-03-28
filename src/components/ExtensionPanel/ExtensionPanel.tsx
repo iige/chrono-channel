@@ -131,7 +131,9 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
           categoryUrl = this.state.categoryData.data[0].box_art_url
             .replace("{width}", "270")
             .replace("{height}", "360");
-          console.log("categoryUrl: " + categoryUrl);
+          if (config.debugMode) {
+            console.log("categoryUrl: " + categoryUrl);
+          }
           contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
         }
         contentBody = (

@@ -1,9 +1,22 @@
 # Chrono Channel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The code behind the [Chrono Channel extension available on Twitch](https://dashboard.twitch.tv/extensions/edbkgj9xjb74cmtvdnvmrn72tmo8fc-0.0.1).
+
 
 This is a panel extension for Twitch that shows a countdown timer for an upcoming stream. Also displays other streams scheduled for the week.
 
+
+You can treat [App.tsx](./src/App.tsx) as the entry point and start from there.
+
+This project was created with [Create React App](https://github.com/facebook/create-react-app).
+
+**Other Notable Resources/Libraries Used:**
+- [React](https://react.dev/)
+- [Luxon](https://moment.github.io/luxon/#/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+
+# Create React App Boilerplate
 ## Available Scripts
 
 In the project directory, you can run:

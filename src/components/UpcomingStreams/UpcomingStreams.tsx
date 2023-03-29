@@ -66,6 +66,7 @@ export class UpcomingStreams extends React.Component<
 
       // Loop through each day of the current week and determine if there are any streams scheduled for that day
       for (var i = 0; i < daysOfWeek.length; i++) {
+        // Create Luxon date for the start of the current day
         const daysToAdd = i;
         const startOfDay = startOfWeek.plus({ days: daysToAdd }).startOf("day");
         newState.weekdays[daysOfWeek[i]].startOfDay = startOfDay;
@@ -73,6 +74,7 @@ export class UpcomingStreams extends React.Component<
           newState.weekdays[daysOfWeek[i]].glow = true;
         }
 
+        // Check if any of the upcoming streams are planned to start on the current day
         for (var j = 0; j < segments.length; j++) {
           const segment = segments[j];
           if (segment.canceled_until !== null) {

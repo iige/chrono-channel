@@ -1,3 +1,7 @@
+/**
+ * This is the main component for the extension panel. It is responsible for fetching various data from the Twitch API and determining what to display
+ */
+
 import React, { ReactNode } from "react";
 import { UpcomingStreams } from "../UpcomingStreams/UpcomingStreams";
 import { Header } from "../Header/Header";
@@ -71,6 +75,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     };
     // End state update functions
 
+    // This is the callback that the Twitch extension helper provides us. Will update whenever the JWT is refreshed
     (window as any).Twitch.ext.onAuthorized(async function (auth: any) {
       const apiClient = new TwitchApiClient(auth);
 
@@ -87,7 +92,6 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       let nextStream = null;
       if (scheduleResponse) {
         nextStream = getNextStream(scheduleResponse);
-        console.log("nextStream", nextStream);
       }
 
       // If next stream has a category specified - fetch the category data so we can use the box art
@@ -100,12 +104,19 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         }
       }
 
+      // Update the state with the schedule data for the channel's upcoming streams
       if (scheduleResponse) {
         updateScheduleData(scheduleResponse, nextStream);
       }
     });
   }
 
+  /**
+   * This function determines what content to display in the extension panel based on the current state, as well as the appropriate styles.
+   *
+   * Depending on what information we get from the Twitch API, we may display a "No upcoming streams" message, a "Live now" message, or the countdown timer with upcoming streams
+   * @returns An object containing the content body to display and the style to apply to the content body
+   */
   determineContentBody(): {
     contentBody: ReactNode;
     contentBodyStyle: React.CSSProperties;
@@ -114,7 +125,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     let categoryUrl = "";
     let contentBodyStyle: React.CSSProperties = {};
 
-    let contentBody = <NoUpcoming onVacation={false} />;
+    let contentBody = <NoUpcoming onVacation={false} />; // Default to "No upcoming streams" or "Nothing Scheduled" message
 
     if (this.state.onVacation) {
       contentBody = <NoUpcoming onVacation={true} />;

@@ -1,7 +1,7 @@
 import { ExtensionPanel } from "./components/ExtensionPanel/ExtensionPanel";
 import { Settings } from "luxon";
 
-Settings.throwOnInvalid = true;
+Settings.throwOnInvalid = true; // Luxon will throw an error if it encounters an invalid date, which is useful for debugging and writing robust code
 
 function App() {
   return (

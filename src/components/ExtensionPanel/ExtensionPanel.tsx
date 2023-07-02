@@ -144,7 +144,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       contentBody = (
         <>
           {this.state.liveNow && <LiveText />}
-          {this.state.nextStream && (
+          {this.state.nextStream && !this.state.liveNow && (
             <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
           )}
           {this.state.scheduleData && (

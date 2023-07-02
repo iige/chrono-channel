@@ -12,8 +12,7 @@ import { NoUpcoming } from "../NoUpcoming/NoUpcoming";
 import { TwitchApiClient } from "../../util/TwitchApiClient";
 import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
 import { config } from "../../util/Globals";
-import { LiveNow } from "../LiveNow/LiveNow";
-import abstractBg from "../../assets/abstractBg.jpg";
+import { LiveText } from "../LiveText/LiveText";
 
 type ExtensionPanelState = {
   scheduleData: ScheduleApiResponse | null;
@@ -80,10 +79,10 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       const apiClient = new TwitchApiClient(auth);
 
       // Check if the channel is live
-      const streamResponse = await apiClient.getStreamData();
+      const liveStatusResponse = await apiClient.getStreamData();
 
-      if (streamResponse) {
-        const liveStatus = getStreamLiveStatus(streamResponse);
+      if (liveStatusResponse) {
+        const liveStatus = getStreamLiveStatus(liveStatusResponse);
         updateLiveStatus(liveStatus);
       }
 
@@ -121,42 +120,41 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     contentBody: ReactNode;
     contentBodyStyle: React.CSSProperties;
   } {
-    let timeDisplay = <></>;
     let categoryUrl = "";
     let contentBodyStyle: React.CSSProperties = {};
 
     let contentBody = <NoUpcoming onVacation={false} />; // Default to "No upcoming streams" or "Nothing Scheduled" message
 
+    const hasDataForMainDisplay =
+      this.state.scheduleData && this.state.nextStream;
+
     if (this.state.onVacation) {
       contentBody = <NoUpcoming onVacation={true} />;
-    } else if (this.state.liveNow) {
-      contentBody = <LiveNow />;
-      contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.85), rgba(32,28,43,0.85)), url(${abstractBg}) center / cover no-repeat`;
-    } else {
-      if (this.state.nextStream && this.state.scheduleData) {
-        timeDisplay = (
-          <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
-        );
-
-        if (this.state.categoryData) {
-          categoryUrl = this.state.categoryData.data[0].box_art_url
-            .replace("{width}", "270")
-            .replace("{height}", "360");
-          if (config.debugMode) {
-            console.log("categoryUrl: " + categoryUrl);
-          }
-          contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+    } else if (hasDataForMainDisplay) {
+      if (this.state.categoryData) {
+        // If we have category data, use the box art as the background
+        categoryUrl = this.state.categoryData.data[0].box_art_url
+          .replace("{width}", "270")
+          .replace("{height}", "360");
+        if (config.debugMode) {
+          console.log("categoryUrl: " + categoryUrl);
         }
-        contentBody = (
-          <>
-            {timeDisplay}
+        contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+      }
+      contentBody = (
+        <>
+          {this.state.liveNow && <LiveText />}
+          {this.state.nextStream && (
+            <TimeDisplay streamStartTime={this.state.nextStream.start_time} />
+          )}
+          {this.state.scheduleData && (
             <UpcomingStreams
               schedule={this.state.scheduleData}
             ></UpcomingStreams>
-            <Offset />
-          </>
-        );
-      }
+          )}
+          <Offset />
+        </>
+      );
     }
     return { contentBody, contentBodyStyle };
   }

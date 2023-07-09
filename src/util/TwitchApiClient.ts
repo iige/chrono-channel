@@ -39,9 +39,7 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if(config.debugMode) {
-        console.log("Error fetching schedule data: ", e);
-      }
+      console.log("Error fetching schedule data: ", e);
       return null;
     }
   }
@@ -66,9 +64,7 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if (config.debugMode) {
-        console.log("Error fetching category data: ", e);
-      }
+      console.log("Error fetching category data: ", e);
       return null;
     }
   }
@@ -92,9 +88,7 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if(config.debugMode) {
-        console.log("Error fetching stream data: ", e);
-      }
+      console.log("Error fetching stream data: ", e);
       return null;
     }
   }

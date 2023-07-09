@@ -95,9 +95,7 @@ export class UpcomingStreams extends React.Component<
 
       this.setState(newState);
     } catch (e) {
-      if (config.debugMode) {
-        console.log("Error parsing date", e);
-      }
+      console.log("Error parsing date", e);
     }
   }
 

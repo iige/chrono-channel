@@ -35,6 +35,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
   }
 
   componentDidMount() {
+    console.log("ExtensionPanel mounted - This is a test");
     this.fetchData();
   }
 
@@ -53,18 +54,14 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
           onVacation: onVacation,
         };
       });
-      if (config.debugMode) {
-        console.log("schedule data", response);
-      }
+      console.log("schedule data", response);
     };
 
     const updateCategoryData = (response: CategoryApiResponse) => {
       this.setState((prevState) => {
         return { ...prevState, categoryData: response };
       });
-      if (config.debugMode) {
-        console.log("category data", response);
-      }
+      console.log("category data", response);
     };
 
     const updateLiveStatus = (status: boolean) => {
@@ -136,9 +133,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
         categoryUrl = this.state.categoryData.data[0].box_art_url
           .replace("{width}", "270")
           .replace("{height}", "360");
-        if (config.debugMode) {
-          console.log("categoryUrl: " + categoryUrl);
-        }
+        console.log("categoryUrl: " + categoryUrl);
         contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
       }
       contentBody = (

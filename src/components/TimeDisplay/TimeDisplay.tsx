@@ -30,9 +30,7 @@ export class TimeDisplay extends React.Component<
         countdownFinished = true;
       }
     } catch (error) {
-      if (config.debugMode) {
-        console.log(error);
-      }
+      console.log(error);
     }
 
     this.state = {

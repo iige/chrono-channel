@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 import React from "react";
-import { config } from "../../util/Globals";
 import { ScheduleApiResponse } from "../types";
 
 type UpcomingStreamsProps = {

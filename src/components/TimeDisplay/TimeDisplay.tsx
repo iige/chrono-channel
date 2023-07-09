@@ -1,6 +1,5 @@
 import React from "react";
 import { DateTime } from "luxon";
-import { config } from "../../util/Globals";
 
 type TimeDisplayProps = {
   streamStartTime: string;

@@ -11,7 +11,6 @@ import { CategoryApiResponse, ScheduleApiResponse, Segment } from "../types";
 import { NoUpcoming } from "../NoUpcoming/NoUpcoming";
 import { TwitchApiClient } from "../../util/TwitchApiClient";
 import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
-import { config } from "../../util/Globals";
 import { LiveText } from "../LiveText/LiveText";
 
 type ExtensionPanelState = {
@@ -35,7 +34,6 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
   }
 
   componentDidMount() {
-    console.log("ExtensionPanel mounted - This is a test");
     this.fetchData();
   }
 

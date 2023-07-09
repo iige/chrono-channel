@@ -12,6 +12,7 @@ import { NoUpcoming } from "../NoUpcoming/NoUpcoming";
 import { TwitchApiClient } from "../../util/TwitchApiClient";
 import { getNextStream, getStreamLiveStatus, getVacationStatus } from "./util";
 import { LiveText } from "../LiveText/LiveText";
+import hexagonBg from "../../assets/hexagonBg.png";
 
 type ExtensionPanelState = {
   scheduleData: ScheduleApiResponse | null;
@@ -115,7 +116,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     contentBody: ReactNode;
     contentBodyStyle: React.CSSProperties;
   } {
-    let categoryUrl = "";
+    let categoryUrl = hexagonBg;
     let contentBodyStyle: React.CSSProperties = {};
 
     let contentBody = <NoUpcoming onVacation={false} />; // Default to "No upcoming streams" or "Nothing Scheduled" message
@@ -133,6 +134,8 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
           .replace("{height}", "360");
         console.log("categoryUrl: " + categoryUrl);
         contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.8), rgba(32,28,43,0.8)), url(${categoryUrl}) center / contain no-repeat`;
+      } else {
+        contentBodyStyle.background = `linear-gradient(rgba(32,28,43,0.92), rgba(32,28,43,0.92)), url(${categoryUrl}) center`;
       }
       contentBody = (
         <>

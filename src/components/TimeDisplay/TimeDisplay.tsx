@@ -1,6 +1,5 @@
 import React from "react";
 import { DateTime } from "luxon";
-import { config } from "../../util/Globals";
 
 type TimeDisplayProps = {
   streamStartTime: string;
@@ -30,9 +29,7 @@ export class TimeDisplay extends React.Component<
         countdownFinished = true;
       }
     } catch (error) {
-      if (config.debugMode) {
-        console.log(error);
-      }
+      console.log(error);
     }
 
     this.state = {

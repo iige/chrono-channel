@@ -1,9 +1,9 @@
 import {
   CategoryApiResponse,
+  GetUserApiResponse,
   ScheduleApiResponse,
   StreamApiResponse,
 } from "../components/types";
-import { config } from "./Globals";
 
 /** This class is a collection of functions for interacting with the Twitch API for this panel extension */
 export class TwitchApiClient {
@@ -39,9 +39,7 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if(config.debugMode) {
-        console.log("Error fetching schedule data: ", e);
-      }
+      console.log("Error fetching schedule data: ", e);
       return null;
     }
   }
@@ -66,9 +64,7 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if (config.debugMode) {
-        console.log("Error fetching category data: ", e);
-      }
+      console.log("Error fetching category data: ", e);
       return null;
     }
   }
@@ -92,9 +88,22 @@ export class TwitchApiClient {
         return null;
       }
     } catch (e) {
-      if(config.debugMode) {
-        console.log("Error fetching stream data: ", e);
+      console.log("Error fetching stream data: ", e);
+      return null;
+    }
+  }
+
+  async getUserInfo(channelId: string): Promise<GetUserApiResponse | null> {
+    const channelInfoResponse = await this.fetchWithAuth(`https://api.twitch.tv/helix/users?id=${channelId}`);
+    try {
+      if (channelInfoResponse.ok) {
+        const channelInfoResponseJson = await channelInfoResponse.json();
+        return channelInfoResponseJson;
+      } else {
+        return null;
       }
+    } catch (e) {
+      console.log("Error fetching channel info: ", e);
       return null;
     }
   }

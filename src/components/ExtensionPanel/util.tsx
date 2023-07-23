@@ -1,5 +1,4 @@
 import { DateTime } from "luxon";
-import { config } from "../../util/Globals";
 import { ScheduleApiResponse, Segment, StreamApiResponse } from "../types";
 
 /**
@@ -19,9 +18,7 @@ export function getVacationStatus(scheduleData: ScheduleApiResponse): boolean {
         return true;
       }
     } catch (e) {
-      if (config.debugMode) {
-        console.log(e);
-      }
+      console.log(e);
     }
   }
   return false;
@@ -45,9 +42,7 @@ export function getNextStream(
         return currentSegment;
       }
     } catch (e) {
-      if (config.debugMode) {
-        console.log(e);
-      }
+      console.log(e);
       continue;
     }
   }

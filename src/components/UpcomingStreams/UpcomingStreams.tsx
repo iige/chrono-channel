@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 import React from "react";
-import { config } from "../../util/Globals";
 import { ScheduleApiResponse } from "../types";
 
 type UpcomingStreamsProps = {
@@ -21,6 +20,28 @@ type UpcomingStreamState = {
 };
 
 const daysOfWeek: Weekday[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+function luxonDayToWeekday(day: DateTime): Weekday {
+  const luxonDay = day.weekday;
+  switch (luxonDay) {
+    case 1:
+      return "MON";
+    case 2:
+      return "TUE";
+    case 3:
+      return "WED";
+    case 4:
+      return "THU";
+    case 5:
+      return "FRI";
+    case 6:
+      return "SAT";
+    case 7:
+      return "SUN";
+    default:
+      throw new Error("Invalid luxon day");
+  }
+}
 
 export class UpcomingStreams extends React.Component<
   UpcomingStreamsProps,
@@ -60,78 +81,107 @@ export class UpcomingStreams extends React.Component<
           SUN: { glow: false },
         },
       };
-      const startOfWeek = now.startOf("week");
+
+      const startOfCurrentDay = now.startOf("day");
 
       const segments = this.props.schedule.data.segments;
 
-      // Loop through each day of the current week and determine if there are any streams scheduled for that day
+      // Loop through the next seven days and determine if there are any streams scheduled for that day
       for (var i = 0; i < daysOfWeek.length; i++) {
         // Create Luxon date for the start of the current day
         const daysToAdd = i;
-        const startOfDay = startOfWeek.plus({ days: daysToAdd }).startOf("day");
-        newState.weekdays[daysOfWeek[i]].startOfDay = startOfDay;
-        if (startOfDay.hasSame(now, "day")) {
-          newState.weekdays[daysOfWeek[i]].glow = true;
+        const startOfNextDay = startOfCurrentDay
+          .plus({ days: daysToAdd })
+          .startOf("day");
+        const nextWeekday = luxonDayToWeekday(startOfNextDay);
+        newState.weekdays[nextWeekday].startOfDay = startOfNextDay;
+
+        // Make the current day glow
+        if (startOfNextDay.hasSame(now, "day")) {
+          newState.weekdays[nextWeekday].glow = true;
         }
 
-        // Check if any of the upcoming streams are planned to start on the current day
+        // Check if any of the upcoming streams are planned to start on the day we are currently checking
         for (var j = 0; j < segments.length; j++) {
           const segment = segments[j];
           if (segment.canceled_until !== null) {
             continue;
           }
           const segmentStartTime = DateTime.fromISO(segment.start_time);
-          if (segmentStartTime.hasSame(startOfDay, "day")) {
+          if (segmentStartTime.hasSame(startOfNextDay, "day")) {
             const hour = segmentStartTime.hour;
             const meridian = hour >= 12 ? "PM" : "AM";
             const hourStart = hour > 12 ? hour - 12 : hour;
-            newState.weekdays[daysOfWeek[i]].hourStart = hourStart;
-            newState.weekdays[daysOfWeek[i]].minuteStart =
+            newState.weekdays[nextWeekday].hourStart = hourStart;
+            newState.weekdays[nextWeekday].minuteStart =
               segmentStartTime.minute;
-            newState.weekdays[daysOfWeek[i]].meridian = meridian;
+            newState.weekdays[nextWeekday].meridian = meridian;
           }
         }
       }
-
       this.setState(newState);
     } catch (e) {
-      if (config.debugMode) {
-        console.log("Error parsing date", e);
+      console.log("Error parsing date", e);
+    }
+  }
+
+
+  /*
+    Builds the content for the upcoming stream component. Makes the current day of the week first and glow. 
+    Displays the start times of streams over the next seven days.
+  */
+  buildContent() {
+    let content = <></>
+    const now = DateTime.now();
+    const startOfCurrentDay = now.startOf("day");
+    let dayIdx = startOfCurrentDay.weekday - 1;
+    let count = 0;
+    while (count < 7) {
+      let day = daysOfWeek[dayIdx];
+      let timeJSX = null;
+      let className = "";
+      let currentDayState = this.state.weekdays[day];
+      if (currentDayState.glow) {
+        className = "glow";
+      }
+      if (currentDayState.hourStart && currentDayState.meridian) {
+        timeJSX = (
+          <>
+            <br />
+            {currentDayState.hourStart}
+            {currentDayState.minuteStart
+              ? `:${currentDayState.minuteStart}`
+              : ""}
+            <br />
+            {currentDayState.meridian}
+          </>
+        );
+      }
+
+      content =
+        <>
+          {content}
+          <h3 className={className} key={count}>
+            {day}
+            {timeJSX}
+          </h3>
+        </>;
+
+      // Loop Condition Updates
+      dayIdx = (dayIdx + 1)
+      count++;
+      if (dayIdx > 6) {
+        dayIdx = 0;
       }
     }
+    return content;
   }
 
   render() {
     return (
       <>
         <div className="col-auto mt-10 grid grid-cols-7 grid-rows-1 px-2 text-center font-montserrat text-xs uppercase text-white">
-          {daysOfWeek.map((day, idx) => {
-            let timeJSX = null;
-            let className = "";
-            let currentDayState = this.state.weekdays[day];
-            if (currentDayState.glow) {
-              className = "glow";
-            }
-            if (currentDayState.hourStart && currentDayState.meridian) {
-              timeJSX = (
-                <>
-                  <br />
-                  {currentDayState.hourStart}
-                  {currentDayState.minuteStart
-                    ? `:${currentDayState.minuteStart}`
-                    : ""}
-                  <br />
-                  {currentDayState.meridian}
-                </>
-              );
-            }
-            return (
-              <h3 className={className} key={idx}>
-                {day}
-                {timeJSX}
-              </h3>
-            );
-          })}
+          {this.buildContent()}
         </div>
       </>
     );

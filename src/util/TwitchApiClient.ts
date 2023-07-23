@@ -1,5 +1,6 @@
 import {
   CategoryApiResponse,
+  GetUserApiResponse,
   ScheduleApiResponse,
   StreamApiResponse,
 } from "../components/types";
@@ -88,6 +89,21 @@ export class TwitchApiClient {
       }
     } catch (e) {
       console.log("Error fetching stream data: ", e);
+      return null;
+    }
+  }
+
+  async getUserInfo(channelId: string): Promise<GetUserApiResponse | null> {
+    const channelInfoResponse = await this.fetchWithAuth(`https://api.twitch.tv/helix/users?id=${channelId}`);
+    try {
+      if (channelInfoResponse.ok) {
+        const channelInfoResponseJson = await channelInfoResponse.json();
+        return channelInfoResponseJson;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.log("Error fetching channel info: ", e);
       return null;
     }
   }

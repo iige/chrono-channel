@@ -47,3 +47,11 @@ export type StreamApiResponse = {
     type: "live" | "";
   }[];
 };
+
+export type GetUserApiResponse = {
+  data: {
+    id: string;
+    login: string;
+    display_name: string;
+  }[];
+};

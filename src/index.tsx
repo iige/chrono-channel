@@ -3,19 +3,38 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { config } from "./util/Globals";
+import ConfigPage from "./ConfigPage";
 
 if (!config.debugMode) {
   console.log = () => {};
   window.console.log = () => {};
 }
 
+
+const router = createBrowserRouter([
+  {
+    path: "/index.html",
+    element: <App />,
+  },
+  {
+    path: "/config.html",
+    element: <ConfigPage />,
+  }
+]);
+
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+
+
+
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 

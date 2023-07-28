@@ -20,7 +20,7 @@ function ConfigPage() {
 
 
   return (
-    <div className="font-montserrat">
+    <div className="font-montserrat h-[100vh] p-4 bg-black">
       <h1 className="text-white py-2">Configuration</h1>
       <p className="text-white">This extension automatically loads information from your schedule.</p>
       {channelName && <a href={`https://twitch.tv/${channelName}/schedule`} target="_blank" rel="noreferrer"><button className="text-white rounded-md bg-twitchPurple py-2 mt-2 px-4">Edit Schedule</button></a>}

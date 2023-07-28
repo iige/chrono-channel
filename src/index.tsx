@@ -15,7 +15,11 @@ if (!config.debugMode) {
 
 const router = createBrowserRouter([
   {
-    path: "/index.html",
+    path: "/",
+    element: <App />,
+  },
+  {
+    path: "index.html",
     element: <App />,
   },
   {

@@ -10,7 +10,7 @@ function ConfigPage() {
       const apiClient = new TwitchApiClient(auth);
       apiClient.getUserInfo(auth.channelId).then((userInfo) => {
         if (userInfo?.data[0]) {
-          setChannelName(userInfo.data[0].login);
+          setChannelName(userInfo.data[0].display_name.toLowerCase());
         }
       }
       );

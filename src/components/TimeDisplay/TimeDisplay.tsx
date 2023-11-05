@@ -14,6 +14,13 @@ type TimeDisplayState = {
   countdownFinished: boolean;
 };
 
+function pluralize(value: number, singular: string, plural: string): string {
+  if(value === 1) {
+    return singular;
+  }
+  return plural;
+}
+
 export class TimeDisplay extends React.Component<
   TimeDisplayProps,
   TimeDisplayState
@@ -89,28 +96,28 @@ export class TimeDisplay extends React.Component<
             <h2 className="text-3xl" id="dayCountNumber">
               {this.state.daysUntil}
             </h2>
-            <h3 className="text-xs uppercase">Days</h3>
+            <h3 className="text-xs uppercase" id="dayNoun">{pluralize(this.state.daysUntil, "Day", "Days")}</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
             <h2 className="text-3xl" id="hourCountNumber">
               {this.state.hoursUntil}
             </h2>
-            <h3 className="text-xs uppercase">Hours</h3>
+            <h3 className="text-xs uppercase" id="hourNoun">{pluralize(this.state.hoursUntil, "Hour", "Hours")}</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
             <h2 className="text-3xl" id="minuteCountNumber">
               {this.state.minutesUntil}
             </h2>
-            <h3 className="text-xs uppercase">Minutes</h3>
+            <h3 className="text-xs uppercase" id="minuteNoun">{pluralize(this.state.minutesUntil, "Minute", "Minutes")}</h3>
           </div>
           <span className="self-center px-2 text-5xl">·</span>
           <div className="flex flex-col">
             <h2 className="text-3xl" id="secondCountNumber">
               {this.state.secondsUntil}
             </h2>
-            <h3 className="text-xs uppercase">Seconds</h3>
+            <h3 className="text-xs uppercase" id="secondNoun">{pluralize(this.state.secondsUntil, "Second", "Seconds")}</h3>
           </div>
         </>
       );

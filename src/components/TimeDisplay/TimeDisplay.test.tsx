@@ -70,4 +70,36 @@ describe("TimeDisplay", () => {
     });
     expect(dayElem?.textContent).toBe("4");
   });
+
+  it("Uses proper pluralization (singular)", async () => {
+    const streamStartTime = DateTime.now().plus({ days: 1, hours: 1, minutes: 1, seconds: 2 }).toISO(); // Offset all units by 1, except seconds
+    render(<TimeDisplay streamStartTime={streamStartTime} />);
+    const dayNoun = document.getElementById("dayNoun");
+    const hourNoun = document.getElementById("hourNoun");
+    const minuteNoun = document.getElementById("minuteNoun");
+    const secondNoun = document.getElementById("secondNoun");
+    act(() => {
+      jest.advanceTimersByTime(1000); // Advance the timer by 1 second (makes the component update and use pluralize function)
+    });
+    expect(dayNoun?.textContent).toBe("Day");
+    expect(hourNoun?.textContent).toBe("Hour");
+    expect(minuteNoun?.textContent).toBe("Minute");
+    expect(secondNoun?.textContent).toBe("Second");
+  });
+
+  it("Uses proper pluralization (plural)", async () => {
+    const streamStartTime = DateTime.now().plus({ days: 2, hours: 2, minutes: 2, seconds: 3 }).toISO(); // Offset all units by 2, except seconds
+    render(<TimeDisplay streamStartTime={streamStartTime} />);
+    const dayNoun = document.getElementById("dayNoun");
+    const hourNoun = document.getElementById("hourNoun");
+    const minuteNoun = document.getElementById("minuteNoun");
+    const secondNoun = document.getElementById("secondNoun");
+    act(() => {
+      jest.advanceTimersByTime(1000); // Advance the timer by 1 second (makes the component update and use pluralize function)
+    });
+    expect(dayNoun?.textContent).toBe("Days");
+    expect(hourNoun?.textContent).toBe("Hours");
+    expect(minuteNoun?.textContent).toBe("Minutes");
+    expect(secondNoun?.textContent).toBe("Seconds");
+  });
 });

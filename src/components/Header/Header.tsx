@@ -5,6 +5,7 @@ type HeaderProps = {
 };
 
 export class Header extends React.Component<HeaderProps, {}> {
+
   render() {
     let headerText = "Next Stream";
     if (this.props.channelName) {

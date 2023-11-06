@@ -7,7 +7,11 @@ Settings.throwOnInvalid = true; // Luxon will throw an error if it encounters an
 
 function App() {
   useEffect(() => {
-    ReactGA.initialize("G-XJY9B5B8Q6");
+    ReactGA.initialize("G-XJY9B5B8Q6", {
+      gtagOptions: {
+        cookie_flags: "max-age=7200;secure;samesite=none",
+      }
+    });
   }, []);
 
   return (

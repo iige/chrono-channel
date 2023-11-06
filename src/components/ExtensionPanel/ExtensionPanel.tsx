@@ -40,6 +40,12 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
     ReactGA.event({ category: "Extension", action: "Panel Loaded" });
   }
 
+  componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<ExtensionPanelState>, snapshot?: any): void {
+    if (this.state.scheduleData !== prevState.scheduleData) {
+      ReactGA.event({ category: "Extension", action: "Schedule Data Loaded", label: this.state.scheduleData?.data.broadcaster_name ?? "Unknown"});
+    }
+  }
+
   async fetchData(): Promise<void> {
     // Begin state update functions
     const updateScheduleData = (
@@ -104,7 +110,7 @@ export class ExtensionPanel extends React.Component<{}, ExtensionPanelState> {
       // Update the state with the schedule data for the channel's upcoming streams
       if (scheduleResponse) {
         updateScheduleData(scheduleResponse, nextStream);
-        ReactGA.event({ category: "Extension", action: "Schedule Data Obtained", label: scheduleResponse.data.broadcaster_name });
+        
       }
     });
   }
